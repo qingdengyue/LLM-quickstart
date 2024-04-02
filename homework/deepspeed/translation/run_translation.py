@@ -16,6 +16,23 @@
 """
 Fine-tuning the library models for sequence to sequence.
 """
+#HF_ENDPOINT=https://hf-mirror.com
+#HF_HOME=/root/autodl-tmp/hfcache/
+#HF_DATASETS_CACHE=/root/autodl-tmp/hfcache/dc
+#HF_ASSETS_CACHE=/root/autodl-tmp/hfcache/dc
+#HUGGINGFACE_HUB_CACHE=/root/autodl-tmp/hfcache/hc
+#HF_HUB_VERBOSITY=debug
+#MODEL_SAVE_PATH=/root/autodl-tmp/
+import os
+os.environ["HF_HUB_CACHE"] = "/root/autodl-tmp/hfcache/hc"
+os.environ["HF_DATASETS_CACHE"] = "/root/autodl-tmp/hfcache/dc"
+os.environ["HF_ASSETS_CACHE"] = "/root/autodl-tmp/hfcache/dc"
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+os.environ["HF_HOME"] = "/root/autodl-tmp/hfcache/dc"
+os.environ["HF_DATASETS_CACHE"] = "/root/autodl-tmp/hfcache/dc"
+os.environ["HF_ASSETS_CACHE"] = "/root/autodl-tmp/hfcache/dc"
+os.environ["HF_HUB_VERBOSITY"] = "debug"
+os.environ["MODEL_SAVE_PATH"] = "/root/autodl-tmp/"
 # You can also adapt this script on your own sequence to sequence task. Pointers for this are left as comments.
 import subprocess
 import os
