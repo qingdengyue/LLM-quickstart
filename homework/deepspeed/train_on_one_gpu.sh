@@ -44,7 +44,7 @@ deepspeed --num_gpus=1 translation/run_translation.py \
 deepspeed --num_gpus=1 translation/run_translation.py \
 --deepspeed config/ds_config_zero3.json \ 
 --model_name_or_path t5-11b --per_device_train_batch_size 12 \
---output_dir /root/autodl-tmp/3/t5-3b --overwrite_output_dir --bf16 \ 
+--output_dir /root/autodl-tmp/3/t5-11b --overwrite_output_dir --bf16 \ 
 --do_train --max_train_samples 500  --num_train_epochs 3 \
 --dataset_name wmt16 --dataset_config "ro-en" \
 --source_lang en --target_lang ro
