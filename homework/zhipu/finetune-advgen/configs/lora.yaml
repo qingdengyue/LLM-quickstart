@@ -2,18 +2,19 @@ data_config:
   train_file: train.json
   val_file: dev.json
   test_file: dev.json
-  num_proc: 16
+  num_proc: 24
 max_input_length: 256
 max_output_length: 512
 training_args:
   # see `transformers.Seq2SeqTrainingArguments`
-  output_dir: ./output
-  max_steps: 3000
+  output_dir: /root/autodl-tmp/output
+  #max_steps: 3000
   # needed to be fit for the dataset
   learning_rate: 5e-5
   # settings for data loading
-  per_device_train_batch_size: 4
-  dataloader_num_workers: 16
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 2
+  dataloader_num_workers: 24
   remove_unused_columns: false
   # settings for saving checkpoints
   save_strategy: steps
@@ -38,9 +39,11 @@ training_args:
   #deepspeed: ds_zero_2.json
   # set to true if train with cpu.
   use_cpu: false
+  fp16: True
 peft_config:
   peft_type: LORA
   task_type: CAUSAL_LM
   r: 8
   lora_alpha: 32
   lora_dropout: 0.1
+  inference_mode: False

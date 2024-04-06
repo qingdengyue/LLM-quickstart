@@ -45,6 +45,14 @@ os.environ["MODEL_SAVE_PATH"] = "/root/autodl-tmp/"
 ModelType = Union[PreTrainedModel, PeftModelForCausalLM]
 TokenizerType = Union[PreTrainedTokenizer, PreTrainedTokenizerFast]
 app = typer.Typer(pretty_exceptions_show_locals=False)
+from datetime import datetime
+
+# 获取当前日期和时间
+current_dateTime = datetime.now()
+
+# 格式化为 yyyyMMddHHmmss
+formatted_dateTime = current_dateTime.strftime("%Y%m%d%H%M%S")
+model_save_path=os.environ["MODEL_SAVE_PATH"]
 
 
 class DataCollatorForSeq2Seq(_DataCollatorForSeq2Seq):
@@ -402,15 +410,17 @@ def load_tokenizer_and_model(
             model = AutoModelForCausalLM.from_pretrained(
                 model_dir,
                 trust_remote_code=True,
-                config=config,
+                config=config
             )
         if peft_config.peft_type.name == "LORA":
             model = AutoModelForCausalLM.from_pretrained(
                 model_dir,
                 trust_remote_code=True,
                 empty_init=False,
-                use_cache=False
+                use_cache=False,
+                torch_dtype=torch.float16
             )
+            model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
             model = get_peft_model(model, peft_config)
             model.print_trainable_parameters()
     else:
@@ -536,8 +546,14 @@ def main(
         compute_metrics=functools.partial(compute_metrics, tokenizer=tokenizer),
     )
 
+
+    auto_resume_from_checkpoint="20000"
+    print('auto_resume_from_checkpoint:', auto_resume_from_checkpoint)
     if auto_resume_from_checkpoint.upper() == "" or auto_resume_from_checkpoint is None:
         trainer.train()
+        after_model_dir = f"{model_save_path}models/chatglm3/{formatted_dateTime}"
+        trainer.model.save_pretrained(after_model_dir)
+        print(f"model saved to {after_model_dir}")
     else:
         output_dir = ft_config.training_args.output_dir
         dirlist = os.listdir(output_dir)
@@ -554,8 +570,14 @@ def main(
                 checkpoint_directory = os.path.join(output_dir, "checkpoint-" + str(checkpoint_sn))
                 print("resume checkpoint from  checkpoint-" + str(checkpoint_sn))
                 trainer.train(resume_from_checkpoint=checkpoint_directory)
+                after_model_dir = f"{model_save_path}models/chatglm3/{formatted_dateTime}"
+                trainer.model.save_pretrained(after_model_dir)
+                print(f"model saved to {after_model_dir}")
             else:
                 trainer.train()
+                after_model_dir = f"{model_save_path}models/chatglm3/{formatted_dateTime}"
+                trainer.model.save_pretrained(after_model_dir)
+                print(f"model saved to {after_model_dir}")
         else:
             if auto_resume_from_checkpoint.isdigit():
                 if int(auto_resume_from_checkpoint) > 0:
@@ -564,7 +586,11 @@ def main(
                     model.enable_input_require_grads()
                     checkpoint_directory = os.path.join(output_dir, "checkpoint-" + str(checkpoint_sn))
                     print("resume checkpoint from  checkpoint-" + str(checkpoint_sn))
+                    print(f"checkpoint_directory:{checkpoint_directory}")
                     trainer.train(resume_from_checkpoint=checkpoint_directory)
+                    after_model_dir = f"{model_save_path}models/chatglm3/{formatted_dateTime}"
+                    trainer.model.save_pretrained(after_model_dir)
+                    print(f"model saved to {after_model_dir}")
             else:
                 print(auto_resume_from_checkpoint,
                       "The specified checkpoint sn(" + auto_resume_from_checkpoint + ") has not been saved. Please search for the correct chkeckpoint in the model output directory")
