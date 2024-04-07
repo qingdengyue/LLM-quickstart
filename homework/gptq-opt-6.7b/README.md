@@ -1,0 +1,1 @@
+## 使用GPTQ 量化 Facebook OPT-6.7B 模型 [AutoGPTQ_opt-6.7b.ipynb](AutoGPTQ_opt-6.7b.ipynb)

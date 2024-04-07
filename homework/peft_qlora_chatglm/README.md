@@ -12,4 +12,4 @@ max_steps=300,
 
 ### 2. 训练过程：[peft_qlora_chatglm.ipynb](peft_qlora_chatglm.ipynb)
 
-### 3. 训练效果: [peft_chatglm_inference.ipynb](peft_chatglm_inference.ipynb)
+### 3. 训练效果：[peft_chatglm_inference.ipynb](peft_chatglm_inference.ipynb)

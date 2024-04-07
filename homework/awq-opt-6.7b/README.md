@@ -1,0 +1,1 @@
+## 使用AWQ 量化 Facebook OPT-6.7B 模型 [AWQ_opt-6.7b.ipynb](AWQ_opt-6.7b.ipynb)
